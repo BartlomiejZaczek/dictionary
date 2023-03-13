@@ -10,7 +10,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>org.example</groupId>
-    <artifactId>slownik</artifactId>
+    <artifactId>dictionary</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
