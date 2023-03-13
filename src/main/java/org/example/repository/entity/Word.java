@@ -11,12 +11,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class English {
+public class Word {
     @Id
     @GeneratedValue
     private long id;
-    private String word;
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "POLISH_WORD")
-    private Polish polish;
+    private String polish;
+    private String english;
 }
