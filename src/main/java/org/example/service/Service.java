@@ -17,7 +17,11 @@ public class Service {
 
     public void save(Request request) {
         if (request.getEnglish().isBlank()|| request.getPolish().isBlank()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Fields must not be empty");
+        }
+        if (repository.findAny(request.getEnglish()) != null ||
+            repository.findAny(request.getPolish()) != null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Word already exists in dictionary");
         }
         repository
                 .save(Word
@@ -29,6 +33,21 @@ public class Service {
 
     public List<Word> findAll() {
         return repository.findAll();
+    }
+
+    public String translate(String word) {
+        Word polish = repository.findByPolish(word);
+        Word english = repository.findByEnglish(word);
+        if (polish == null && english == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Word not found");
+        }
+        if (polish != null) {
+            return "Translation: '" + polish.getEnglish() + "' was found in english dictionary";
+
+        } else if (english != null) {
+            return "Translation: '" + english.getPolish() + "' was found in polish dictionary";
+        }
+        return null;
     }
 }
 

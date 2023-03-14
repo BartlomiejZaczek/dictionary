@@ -9,5 +9,11 @@ import java.util.List;
 
 public interface Repository extends JpaRepository<Word, Long> {
     List<Word> findAll();
+    @Query("SELECT w FROM Word w WHERE w.polish= :polish")
+    Word findByPolish(@Param("polish") String polish);
+    @Query("SELECT w FROM Word w WHERE w.english= :english")
+    Word findByEnglish(@Param("english") String english);
 
+    @Query("SELECT w FROM Word w WHERE w.polish= :word OR w.english= :word")
+    Word findAny(@Param("word") String word);
 }

@@ -5,6 +5,7 @@ import org.example.controller.dto.Request;
 import org.example.repository.entity.Word;
 import org.example.service.Service;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,7 +15,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class Controller {
     private final Service service;
-
 
     @PostMapping(path = "/word")
     @ResponseStatus(code = HttpStatus.CREATED)
@@ -29,4 +29,9 @@ public class Controller {
         return words;
     }
 
+    @GetMapping(path = "/translation")
+    public ResponseEntity<String> translate(@RequestParam String word) {
+        final String translation = service.translate(word);
+        return new ResponseEntity<>(translation, HttpStatus.OK);
+    }
 }
