@@ -26,8 +26,8 @@ public class Service {
         repository
                 .save(Word
                         .builder()
-                        .polish(request.getPolish())
-                        .english(request.getEnglish())
+                        .polish(request.getPolish().toLowerCase())
+                        .english(request.getEnglish().toLowerCase())
                         .build());
     }
 
@@ -36,10 +36,10 @@ public class Service {
     }
 
     public String translate(String word) {
-        Word polish = repository.findByPolish(word);
-        Word english = repository.findByEnglish(word);
+        Word polish = repository.findByPolish(word.toLowerCase());
+        Word english = repository.findByEnglish(word.toLowerCase());
         if (polish == null && english == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Word not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Word not recognized");
         }
         if (polish != null) {
             return "Translation: '" + polish.getEnglish() + "' was found in english dictionary";
