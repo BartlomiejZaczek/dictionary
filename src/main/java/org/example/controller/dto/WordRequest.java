@@ -1,14 +1,12 @@
 package org.example.controller.dto;
 
-import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.*;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Request {
+public class WordRequest {
 
     @NonNull
     private String polish;
