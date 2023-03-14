@@ -1,35 +1,22 @@
 package org.example.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.controller.dto.EnglishRequest;
-import org.example.controller.dto.EnglishResponse;
-import org.example.repository.entity.English;
-import org.example.service.EnglishService;
+import org.example.controller.dto.Request;
+import org.example.service.Service;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
 public class Controller {
-    private final EnglishService service;
+    private final Service service;
 
-//    @GetMapping(path = "/english")
-//    ResponseEntity <EnglishResponse> getAll() {
-//        final EnglishResponse response = service.findAll();
-//        return new ResponseEntity<>(response, HttpStatus.OK);
-//    }
-@GetMapping(path = "/english")
-    List <English> getAll() {
-    List <English> list = service.findAll();
-        return list;
-    }
-    @PostMapping(path = "/english")
+
+    @PostMapping(path = "/word")
     @ResponseStatus(code = HttpStatus.CREATED)
-    public void addEnglishWord(@RequestBody EnglishRequest request) {
+    public void addWord(@RequestBody Request request) {
         service.save(request);
+
     }
 }
