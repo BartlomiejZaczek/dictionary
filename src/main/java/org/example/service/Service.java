@@ -10,7 +10,9 @@ import org.example.repository.entity.Word;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @org.springframework.stereotype.Service
@@ -85,4 +87,66 @@ public class Service {
         return untranslatedWordRepository.findAll();
     }
 
+    public String createReport() {
+        List<String> polish = repository.findAllPolishWords();
+        List<String> english = repository.findAllEnglishWords();
+        int averagePolishWordSize = 0;
+        int averageEnglishWordSize = 0;
+
+        int polishLetterCount = 0;
+        if (polish.size()>0) {
+            for (String word : polish) {
+                polishLetterCount += word.length();
+                averagePolishWordSize = polishLetterCount / polish.size();
+            }
+        }
+        int englishLetterCount = 0;
+        if (english.size()>0) {
+            for (String word : english) {
+                englishLetterCount += word.length();
+            }
+                averageEnglishWordSize = englishLetterCount / english.size();
+        }
+        Map<Integer, Integer> polishWordsLengthCount = new HashMap<>();
+        for (String word:
+             polish) {
+            int length = word.length();
+            if (polishWordsLengthCount.containsKey(length)) {
+                polishWordsLengthCount.put(length, polishWordsLengthCount.get(length) + 1);
+            } else {
+                polishWordsLengthCount.put(length, 1);
+            }
+        }
+        Map<Integer, Integer> englishWordLengthCount = new HashMap<>();
+        for (String word:
+                polish) {
+            int length = word.length();
+            if (englishWordLengthCount.containsKey(length)) {
+                englishWordLengthCount.put(length, englishWordLengthCount.get(length) + 1);
+            } else {
+                englishWordLengthCount.put(length, 1);
+            }
+        }
+        StringBuffer polishWordsLengths = new StringBuffer();
+        for (Map.Entry<Integer, Integer> entry:
+                polishWordsLengthCount.entrySet()) {
+            polishWordsLengths.append(" [" + entry.getValue() + " words with length: " + entry.getKey() + "]\n");
+        }
+
+        StringBuffer englishWordsLengths = new StringBuffer();
+        for (Map.Entry<Integer, Integer> entry:
+                englishWordLengthCount.entrySet()) {
+            englishWordsLengths.append(" [" + entry.getValue() + " words with length: " + entry.getKey() + "]\n");
+        }
+
+
+            return "All words count: " + (polish.size() + english.size()) +
+                    "\nPolish words count: " + polish.size() +
+                    "\nEnglish words count: " + english.size() +
+                    "\nAverage polish word length: " + averagePolishWordSize +
+                    "\nAverage english word length: " + averageEnglishWordSize +
+                    "\nUntranslated words count: " + findAllUntranslated().size() +
+                    "\nPolish words all lengths count:\n" + polishWordsLengths +
+                    "\nEnglish words all lengths count:\n" + englishWordsLengths;
+    }
 }

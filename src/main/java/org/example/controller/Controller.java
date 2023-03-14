@@ -47,4 +47,11 @@ public class Controller {
         List <UntranslatedWord> words = service.findAllUntranslated();
         return words;
     }
+
+    @GetMapping(path = "/report")
+    @ResponseStatus(code = HttpStatus.OK)
+    String createReport() {
+        String report = service.createReport();
+        return report;
+    }
 }

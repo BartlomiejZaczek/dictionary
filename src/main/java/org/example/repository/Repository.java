@@ -16,4 +16,8 @@ public interface Repository extends JpaRepository<Word, Long> {
 
     @Query("SELECT w FROM Word w WHERE w.polish= :word OR w.english= :word")
     Word findAny(@Param("word") String word);
+    @Query(value = "SELECT Polish FROM Words", nativeQuery = true)
+    List<String> findAllPolishWords();
+    @Query(value = "SELECT English FROM Words", nativeQuery = true)
+    List<String> findAllEnglishWords();
 }
