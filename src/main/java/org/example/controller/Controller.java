@@ -4,6 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.example.controller.dto.Request;
 import org.example.repository.entity.Word;
 import org.example.service.Service;
+import org.springdoc.core.annotations.ParameterObject;
+import org.springdoc.core.converters.models.Pageable;
+import org.springdoc.core.converters.models.PageableAsQueryParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +27,7 @@ public class Controller {
 
     @GetMapping(path = "/words")
     @ResponseStatus(code = HttpStatus.OK)
-    List<Word> findAll() {
+    List<Word> findAll(@ParameterObject Pageable pageable) {
         List <Word> words = service.findAll();
         return words;
     }
