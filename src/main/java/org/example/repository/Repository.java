@@ -13,7 +13,6 @@ public interface Repository extends JpaRepository<Word, Long> {
     Word findByPolish(@Param("polish") String polish);
     @Query("SELECT w FROM Word w WHERE w.english= :english")
     Word findByEnglish(@Param("english") String english);
-
     @Query("SELECT w FROM Word w WHERE w.polish= :word OR w.english= :word")
     Word findAny(@Param("word") String word);
     @Query(value = "SELECT Polish FROM Words", nativeQuery = true)

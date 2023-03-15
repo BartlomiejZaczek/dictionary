@@ -2,7 +2,6 @@ package org.example.service;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.PdfDocument;
 import com.itextpdf.text.pdf.PdfWriter;
 import lombok.RequiredArgsConstructor;
 import org.example.controller.dto.UntranslatedWordRequest;
@@ -85,6 +84,12 @@ public class Service {
     }
 
     public void saveUntranslated(UntranslatedWordRequest untranslatedWordRequest) {
+        if (untranslatedWordRequest.getWord().isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Fields must not be empty");
+        }
+        if (untranslatedWordRepository.findAny(untranslatedWordRequest.getWord()) != null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Word already exists in dictionary");
+        }
         untranslatedWordRepository
                 .save(UntranslatedWord
                         .builder()
