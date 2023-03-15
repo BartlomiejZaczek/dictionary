@@ -66,16 +66,19 @@ public class Service {
         String[] sentenceArray = sentence.split(" ");
         String[] newSentence = new String[sentenceArray.length];
         int i = 0;
+        if (sentence == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Field must not be empty");
+        }
         for (String word : sentenceArray) {
             Word polish = repository.findByPolish(word.toLowerCase());
             Word english = repository.findByEnglish(word.toLowerCase());
             word.toLowerCase();
             if (polish != null) {
-                newSentence[i] = polish.getEnglish();
+                newSentence[i] = polish.getEnglish().toLowerCase();
             } else if (english != null) {
-                newSentence[i] = english.getPolish();
+                newSentence[i] = english.getPolish().toLowerCase();
             } else {
-                newSentence[i] = sentenceArray[i];
+                newSentence[i] = sentenceArray[i].toLowerCase();
                 saveUntranslated(new UntranslatedWordRequest(sentenceArray[i]));
             }
             i++;
@@ -114,13 +117,6 @@ public class Service {
                 averagePolishWordSize = polishLetterCount / polish.size();
             }
         }
-        int englishLetterCount = 0;
-        if (english.size() > 0) {
-            for (String word : english) {
-                englishLetterCount += word.length();
-            }
-            averageEnglishWordSize = englishLetterCount / english.size();
-        }
         Map<Integer, Integer> polishWordsLengthCount = new HashMap<>();
         for (String word :
                 polish) {
@@ -131,9 +127,21 @@ public class Service {
                 polishWordsLengthCount.put(length, 1);
             }
         }
+        StringBuffer polishWordsLengths = new StringBuffer();
+        for (Map.Entry<Integer, Integer> entry :
+                polishWordsLengthCount.entrySet()) {
+            polishWordsLengths.append(" [" + entry.getValue() + " words with length: " + entry.getKey() + "]\n");
+        }
+        int englishLetterCount = 0;
+        if (english.size() > 0) {
+            for (String word : english) {
+                englishLetterCount += word.length();
+            }
+            averageEnglishWordSize = englishLetterCount / english.size();
+        }
         Map<Integer, Integer> englishWordLengthCount = new HashMap<>();
         for (String word :
-                polish) {
+                english) {
             int length = word.length();
             if (englishWordLengthCount.containsKey(length)) {
                 englishWordLengthCount.put(length, englishWordLengthCount.get(length) + 1);
@@ -141,12 +149,6 @@ public class Service {
                 englishWordLengthCount.put(length, 1);
             }
         }
-        StringBuffer polishWordsLengths = new StringBuffer();
-        for (Map.Entry<Integer, Integer> entry :
-                polishWordsLengthCount.entrySet()) {
-            polishWordsLengths.append(" [" + entry.getValue() + " words with length: " + entry.getKey() + "]\n");
-        }
-
         StringBuffer englishWordsLengths = new StringBuffer();
         for (Map.Entry<Integer, Integer> entry :
                 englishWordLengthCount.entrySet()) {
